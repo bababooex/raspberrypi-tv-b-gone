@@ -2,7 +2,7 @@ import pigpio
 import time
 import json
 import os
-
+#Python script, that sends universal TV codes with external IR led
 # === Configuration ===
 GPIO_IR_LED = 17  # I use this pin for TX
 CODES_FILE = "old_codes.txt"
@@ -21,7 +21,7 @@ def send_ir_code(code_data):
     table = code_data["table"]
     index = code_data["index"]
 
-    # 
+    
     pulses = []
     for i in index:
         pulses += table[i]
