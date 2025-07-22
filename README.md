@@ -20,7 +20,7 @@ It will enable pigpiod and throw you to menu, where you can choose either runnin
 # Receiver circuit
 # External references
 - https://learn.adafruit.com/circuitpython-tv-zapper-with-circuit-playground-express/overview
-- https://github.com/bikeNomad/micropython-tv-b-gone?tab=readme-ov-file
+- https://github.com/bikeNomad/micropython-tv-b-gone
 - https://abyz.me.uk/rpi/pigpio/index.html
 - https://www.tvbgone.com/
 # TO DO
