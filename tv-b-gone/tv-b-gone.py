@@ -9,8 +9,6 @@ CODES_FILE = "old_codes.txt"
 
 # === Initialize pigpio ===
 pi = pigpio.pi()
-if not pi.connected:
-    raise Exception("Could not connect to pigpio daemon. Is it running?")
 
 def send_ir_code(code_data):
     freq = code_data.get("freq", 38000)
