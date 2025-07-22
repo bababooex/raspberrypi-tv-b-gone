@@ -6,8 +6,8 @@ import os
 # === Configuration ===
 GPIO_IR_LED = 17  # I use this pin for TX
 CODES_FILE = "old_codes.txt"
+# =====================
 
-# === Initialize pigpio ===
 pi = pigpio.pi()
 
 def send_ir_code(code_data):
