@@ -1,7 +1,7 @@
 # TV-B-Gone for raspberry pi
 This repository contains implementation of the TV-B-Gone project, it is in simple terms universal remote that turns off all televisions within its range. Original TV-B-Gone was created by Mitch Altman, nowdays, there are a lot of implementations, but I have never seen any for raspberry pi, so this is it. I also added option to save and replay your own codes with irrp.py - IR example from official pigpio library. 
 # Requirements
-The script requires pigpio library to run, you can install it by running:
+The script requires pigpio library to work, you can install it by running:
 ```
 wget https://github.com/joan2937/pigpio/archive/master.zip
 unzip master.zip
@@ -18,3 +18,9 @@ sudo chmod +x menu.sh
 It will enable pigpiod and throw you to menu, where you can choose either running TV-B-Gone codes, or save, replay, delete code and also exiting the script, this will also kill pigpiod.
 # Transmitter circuit
 # Receiver circuit
+# External references
+- https://learn.adafruit.com/circuitpython-tv-zapper-with-circuit-playground-express/parsing-data
+- https://github.com/bikeNomad/micropython-tv-b-gone?tab=readme-ov-file
+- https://abyz.me.uk/rpi/pigpio/index.html
+- https://www.tvbgone.com/
+# TO DO
