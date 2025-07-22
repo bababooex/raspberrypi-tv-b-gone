@@ -1,4 +1,5 @@
 #!/bin/bash
+#Script uses whiptail to create "user friendly" interface
 
 # === File and GPIO configuration ===
 TVBGONE_SCRIPT="tv-b-gone.py"
