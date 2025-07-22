@@ -1,1 +1,1 @@
-# raspberrypi-tv-b-gone
+# TV-B-Gone for raspberry pi
