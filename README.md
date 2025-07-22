@@ -15,12 +15,14 @@ To use the script, make it executable with chmod and then simply run it with bas
 sudo chmod +x menu.sh
 ./menu.sh
 ```
-It will enable pigpiod and throw you to menu, where you can choose either running TV-B-Gone codes, or save, replay, delete code and also exiting the script, this will also kill pigpiod.
+It will enable pigpiod and throw you to menu, where you can choose either running TV-B-Gone codes, or save, replay, delete your custom code and also exiting the script, this will also kill pigpiod.
 # Transmitter circuit
 # Receiver circuit
 # External references
-- https://learn.adafruit.com/circuitpython-tv-zapper-with-circuit-playground-express/parsing-data
+- https://learn.adafruit.com/circuitpython-tv-zapper-with-circuit-playground-express/overview
 - https://github.com/bikeNomad/micropython-tv-b-gone?tab=readme-ov-file
 - https://abyz.me.uk/rpi/pigpio/index.html
 - https://www.tvbgone.com/
 # TO DO
+- Fix some errors - doubled text, cancel function
+- More functions, possibilities...
