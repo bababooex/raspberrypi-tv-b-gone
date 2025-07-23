@@ -20,6 +20,7 @@ It will enable pigpiod and throw you to menu, where you can choose either runnin
 Because IR Leds use microsecond pulses, you can drive them to 100mA without problem. I used 940nm IR Led from some remote. Circuit helps to deliver this current, because raspberry pi can deliver maximum 16mA per pin.
 # Receiver circuit
 Circuit uses TSOP1838 IR receiver, but you can also use TSOP38238 or similar, but make sure, it outputs over 3 volts when no signal is detected. Other components are based of the datasheet and are not really needed, I used the only to fill up extra space on universal board.
+![RX](images/RX.png)
 # External references
 - https://learn.adafruit.com/circuitpython-tv-zapper-with-circuit-playground-express/overview - classic TV-B-Gone codes
 - https://github.com/bikeNomad/micropython-tv-b-gone - new codes from universal TV remote
