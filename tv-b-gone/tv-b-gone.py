@@ -3,6 +3,7 @@ import time
 import json
 import os
 #Python script, that sends universal TV codes with external IR led
+#Some sent codes are probably the same, but I am to lazy to filter them out, I only removed wrong pairs and added names based on original github repository, thats all
 # === Configuration ===
 GPIO_IR_LED = 17  # I use this pin for TX
 CODES_FILE = "old_codes.txt"
