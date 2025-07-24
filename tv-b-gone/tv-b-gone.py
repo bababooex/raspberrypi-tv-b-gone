@@ -71,7 +71,7 @@ def send_micropython_format(codes):
     for name, *pulses in codes:
         print(f"Sending {name} with 38kHz")
         send_ir_code({
-            "freq": 38000,
+            "freq": 38000, # Codes from the universal remote are probably all around 38kHz
             "repeat": 1,
             "repeat_delay": 0,
             "delay": 0.1,
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     try:
         load_and_send(CODES_FILE)  
         import new_codes
-        send_micropython_format(new_codes.CODES)
+        send_micropython_format(new_codes.CODES) #If you dont want to use some format, just add # symbol before it 
     except KeyboardInterrupt:
         print("\nInterrupted by user.")
     finally:
