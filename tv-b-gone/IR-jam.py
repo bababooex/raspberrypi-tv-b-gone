@@ -1,6 +1,6 @@
 import time
 import pigpio
-
+# This python script just sends blank 38kHz signal, just like the old-school NE555 IR jammer
 # === Configuration ===
 GPIO_IR_LED = 17
 # =====================
