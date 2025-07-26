@@ -3,6 +3,7 @@
 
 # === File and GPIO configuration ===
 TVBGONE_SCRIPT="tv-b-gone.py"
+JAMMER_SCRIPT="IR-jam.py"
 IRRP_SCRIPT="irrp.py"
 IRRP_FILE="saved_codes.json"
 TX_GPIO=17 #Same pin as tv-b-gone python file
@@ -15,10 +16,11 @@ sudo pigpiod
 while true; do
   CHOICE=$(whiptail --title "TV-B-GONE Control Panel" --menu "Choose an option:" 20 60 10 \
     "1" "Send TV-B-Gone codes" \
-    "2" "Record new IR code (irrp)" \
-    "3" "Play IR code (irrp)" \
-    "4" "Delete IR code from file (irrp)" \
-    "5" "Exit" 3>&1 1>&2 2>&3)
+    "2" "IR Jammer (oscillator)" \
+    "3" "Record new IR code (irrp)" \
+    "4" "Play IR code (irrp)" \
+    "5" "Delete IR code from file (irrp)" \
+    "6" "Exit" 3>&1 1>&2 2>&3)
 
   case "$CHOICE" in
     "1")
@@ -27,6 +29,12 @@ while true; do
       whiptail --msgbox "Going back to menu!" 10 50
       ;;
     "2")
+      whiptail --msgbox "Sending 38kHz blank signal... Press Ctrl+C to return." 10 50
+      python3 "$JAMMER_SCRIPT"
+      whiptail --msgbox "Going back to menu!" 10 50
+      ;;
+
+    "3")
        CODE_NAME=$(whiptail --inputbox "Enter a name for the IR code (use letters, numbers, underscores only):" 10 60 3>&1 1>&2 2>&3)
       if [[ ! "$CODE_NAME" =~ ^[a-zA-Z0-9_]+$ ]]; then
         whiptail --msgbox "Bad character used!\nGoing back to menu!" 10 50
@@ -43,7 +51,7 @@ while true; do
        whiptail --msgbox "Going back to menu!" 10 50
      fi
      ;;
-    "3")
+    "4")
       if [ ! -s "$IRRP_FILE" ] || [ "$(jq -r 'keys | length' "$IRRP_FILE")" -eq 0 ]; then
         whiptail --msgbox "No IR codes found in $IRRP_FILE" 10 50
         continue
@@ -65,7 +73,7 @@ while true; do
         whiptail --msgbox "Going back to menu!" 10 50
       fi
       ;;
-    "4")
+    "5")
       if [ ! -s "$IRRP_FILE" ] || [ "$(jq -r 'keys | length' "$IRRP_FILE")" -eq 0 ]; then
         whiptail --msgbox "No IR codes found in $IRRP_FILE" 10 50
         continue
@@ -76,7 +84,7 @@ while true; do
         MENU_ITEMS+=" $name $name"
       done < <(jq -r 'keys[]' "$IRRP_FILE")
 
-      CODE_TO_DELETE=$(whiptail --title "Delete IR Code" --menu "Select a code to delete:" 20 60 10 $MENU_ITEMS 3>&1
+      CODE_TO_DELETE=$(whiptail --title "Delete IR Code" --menu "Select a code to delete:" 20 60 10 $MENU_ITEMS 3>&1 1>&2 2>&3)
       if [ -n "$CODE_TO_DELETE" ]; then
         whiptail --yesno "Are you sure you want to delete '$CODE_TO_DELETE'?" 10 50
         if [ $? -eq 0 ]; then
@@ -87,7 +95,7 @@ while true; do
          whiptail --msgbox "Going back to menu!" 10 50
       fi
       ;;
-    "5")
+    "6")
       whiptail --msgbox "Deactivating pigpiod!\nGood bye!" 10 50
       sudo pigpiod kill
       break
