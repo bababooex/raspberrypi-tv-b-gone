@@ -4,14 +4,11 @@ import pigpio
 # === Configuration ===
 GPIO_IR_LED = 17
 # =====================
-
 pi = pigpio.pi()
 pi.set_mode(GPIO_IR_LED, pigpio.OUTPUT)
-frequency = 38000
 pi.set_PWM_range(GPIO_IR_LED, 255)
-duty_cycle = 128
-pi.set_PWM_dutycycle(GPIO_IR_LED, duty_cycle)
-pi.set_PWM_frequency(GPIO_IR_LED, frequency)
+pi.set_PWM_dutycycle(GPIO_IR_LED, 128)
+pi.set_PWM_frequency(GPIO_IR_LED, 38000)
 if __name__ == "__main__":
      try:
         while True:
