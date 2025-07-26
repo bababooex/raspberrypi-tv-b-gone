@@ -32,4 +32,5 @@ Circuit uses TSOP1838 IR receiver, but you can also use TSOP38238 or similar, bu
 - https://www.instructables.com/Raspberry-Pi-Zero-Universal-Remote/ - Calculating IR LED, other good tips
 # TO DO
 - Fix some errors - doubled text, cancel function
+- Flipper Zero .ir files support
 - More functions, possibilities...
