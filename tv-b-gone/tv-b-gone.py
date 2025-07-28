@@ -67,18 +67,38 @@ def load_and_send(file_path):
             except Exception as e:
                 print("Error:", e)
                 
+PROTOCOL_FREQUENCIES = { # common protocol frequnecies 
+    "NEC": 38000,
+    "SAMSUNG": 38000,
+    "RC5": 36000,
+    "RC6": 36000,
+    "SIRC": 40000,
+    "KASEIKYO": 37000,
+    "DENON": 38000
+}
+
 def send_micropython_format(codes):
-    for name, *pulses in codes:
-        print(f"Sending {name} with 38kHz")
+    for entry in codes:
+        if isinstance(entry[0], str):
+            protocol = entry[0]
+            pulses = entry[1:]
+        else:
+            protocol = None
+            pulses = entry
+
+        freq = PROTOCOL_FREQUENCIES.get(protocol, 38000) # set frequency by protocol, otherwise RAW and 38kHz 
+        name = protocol if protocol else "RAW"
+
+        print(f"Sending {name} with {freq}Hz")
+
         send_ir_code({
-            "freq": 38000, # Codes from the universal remote are probably all around 38kHz
+            "freq": freq,
             "repeat": 1,
             "repeat_delay": 0,
             "delay": 0.1,
-            "table": [pulses[i:i+2] for i in range(0, len(pulses), 2)], 
-            "index": list(range(len(pulses)//2)),
+            "table": [pulses[i:i+2] for i in range(0, len(pulses), 2)],
+            "index": list(range(len(pulses) // 2)),
         })
-
 
 # === Main ===
 if __name__ == "__main__":
