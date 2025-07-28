@@ -2,8 +2,8 @@ import pigpio
 import time
 import json
 import os
-#Python script, that sends universal TV codes with external IR led
-#Some sent codes are probably the same, but I am to lazy to filter them out, I only removed wrong pairs and added names based on original github repository, thats all
+# Python script, that sends universal TV codes with external IR led
+# Some sent codes are probably the same, but I am to lazy to filter them out, I only removed wrong pairs and added names based on original github repository, thats all
 # === Configuration ===
 GPIO_IR_LED = 17  # I use this pin for TX
 CODES_FILE = "old_codes.txt"
@@ -64,8 +64,6 @@ def load_and_send(file_path):
                 code = eval(line.strip()) 
                 print(f"Sending code: {code.get('freq')}Hz")
                 send_ir_code(code)
-            except Exception as e:
-                print("Error:", e)
                 
 PROTOCOL_FREQUENCIES = { # common protocol frequnecies 
     "NEC": 38000,
