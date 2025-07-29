@@ -4,6 +4,8 @@ import time
 import sys
 import os
 import argparse
+# This is an attempt to create converter from flipper .ir files to work with pigpio
+# I dont have oscilloscope or something to test this, so this is more for inspiration 
 # === Configuration ===
 GPIO_IR_LED = 17
 MAX_PULSES = 5400
@@ -161,7 +163,7 @@ PROTOCOLS = {
         "header": [],  # Manchester uses no separate header, but bits infront
         "bit0": [(1, 889), (0, 889)],
         "bit1": [(0, 889), (1, 889)],
-        "stop": [],# no stop bit
+        "stop": [],
         "bit_order": "msb",
         "bits": 14
     },
@@ -272,7 +274,6 @@ def parse_ir_file(path):
             continue
 
         if in_data:
-            # Continue capturing raw data lines
             try:
                 current["data"].extend([int(x) for x in line.split() if x.isdigit()])
             except ValueError:
@@ -285,7 +286,6 @@ def parse_ir_file(path):
 
             if k == "data":
                 current["data"] = []
-                # Support inline data values after 'data:'
                 try:
                     current["data"].extend([int(x) for x in v.split() if x.isdigit()])
                 except ValueError:
@@ -425,7 +425,7 @@ def send_raw(info, pi, GPIO_IR_LED=17):
         print(f"[+] Sending raw code: {name}")
         pi.wave_send_once(wid)
         while pi.wave_tx_busy():
-            time.sleep(0.01)
+            time.sleep(0.001)
         pi.wave_delete(wid)
     else:
         print(f"[-] Wave creation failed for: {name}")
