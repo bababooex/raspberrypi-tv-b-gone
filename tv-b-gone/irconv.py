@@ -63,7 +63,7 @@ def build_pioneer_frame(info):
         ((~cmd & 0xFF) << 24) |
         (1 << 32)  # Stop bit always there
     )
-# Currently not supported
+# Currently not supported because its not correct
 def build_kaseikyo_frame(info):
     addr = hex_to_int_le(info.get("address", "00")) & 0xFF
     cmd  = hex_to_int_le(info.get("command", "00")) & 0xFF
