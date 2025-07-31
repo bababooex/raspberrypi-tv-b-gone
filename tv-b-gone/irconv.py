@@ -372,7 +372,7 @@ def send_parsed(info, pi, GPIO_IR_LED=17):
         print(f"[+] Sending code: {name} ({proto.upper()})")
         pi.wave_send_once(wid)
         while pi.wave_tx_busy():
-            time.sleep(0.001)
+            pass
         pi.wave_delete(wid)
     else:
         print("[-] Wave creation failed")
@@ -425,7 +425,7 @@ def send_raw(info, pi, GPIO_IR_LED=17):
         print(f"[+] Sending raw code: {name}")
         pi.wave_send_once(wid)
         while pi.wave_tx_busy():
-            time.sleep(0.001)
+            pass
         pi.wave_delete(wid)
     else:
         print(f"[-] Wave creation failed for: {name}")
