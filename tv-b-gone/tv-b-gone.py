@@ -51,7 +51,7 @@ def send_ir_code(code_data):
         if wave_id >= 0:
             pi.wave_send_once(wave_id)
             while pi.wave_tx_busy():
-                time.sleep(0.01)
+                pass
             pi.wave_delete(wave_id)
         time.sleep(repeat_delay)
 
