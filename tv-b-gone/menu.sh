@@ -25,7 +25,7 @@ while true; do
   case "$CHOICE" in
     "1")
       whiptail --msgbox "Running TV-B-Gone script... Press Ctrl+C to return." 10 50
-      python3 "$TVBGONE_SCRIPT"
+      python3 "$TVBGONE_SCRIPT" "$TX_GPIO"
       whiptail --msgbox "Going back to menu!" 10 50
       ;;
     "2")
