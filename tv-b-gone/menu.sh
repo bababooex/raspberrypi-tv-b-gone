@@ -29,11 +29,11 @@ while true; do
       whiptail --msgbox "Going back to menu!" 10 50
       ;;
     "2")
-      whiptail --msgbox "Sending 38kHz blank signal... Press Ctrl+C to return." 10 50
-      python3 "$JAMMER_SCRIPT"
+      FREQ=$(whiptail --inputbox "Enter valid frequency in KHz:" 10 50 "38000" 3>&1 1>&2 2>&3)
+      whiptail --msgbox "Sending square wave IR signal on $FREQ KHz... Press Ctrl+C to return." 10 50
+      python3 "$JAMMER_SCRIPT" "$FREQ" "$TX_GPIO" || whiptail --msgbox "Error running Python script." 10 50
       whiptail --msgbox "Going back to menu!" 10 50
       ;;
-
     "3")
        CODE_NAME=$(whiptail --inputbox "Enter a name for the IR code (use letters, numbers, underscores only):" 10 60 3>&1 1>&2 2>&3)
       if [[ ! "$CODE_NAME" =~ ^[a-zA-Z0-9_]+$ ]]; then
