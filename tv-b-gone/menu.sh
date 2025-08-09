@@ -43,9 +43,9 @@ while true; do
       if [ -n "$CODE_NAME" ]; then
       FREQ=$(whiptail --inputbox "Enter record frequency in kHz (default is 38):" 10 50 "38" 3>&1 1>&2 2>&3)
       if [[ "$FREQ" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
-        python3 "$IRRP_SCRIPT" -r -g $RX_GPIO -f "$IRRP_FILE" --freq "$FREQ" "$CODE_NAME"
+        python3 "$IRRP_SCRIPT" -r -g $RX_GPIO -f "$IRRP_FILE" --freq "$FREQ" "$CODE_NAME" || whiptail --msgbox "Error running Python script." 10 50
       else
-        python3 "$IRRP_SCRIPT" -r -g $RX_GPIO -f "$IRRP_FILE" "$CODE_NAME"
+        python3 "$IRRP_SCRIPT" -r -g $RX_GPIO -f "$IRRP_FILE" "$CODE_NAME" || whiptail --msgbox "Error running Python script." 10 50
       fi
        else
        whiptail --msgbox "Going back to menu!" 10 50
@@ -65,9 +65,9 @@ while true; do
       if [ -n "$CODE_TO_PLAY" ]; then
         FREQ=$(whiptail --inputbox "Enter playback frequency in kHz (default is 38):" 10 50 "38" 3>&1 1>&2 2>&3)
         if [[ "$FREQ" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
-          python3 "$IRRP_SCRIPT" -p -g $TX_GPIO -f "$IRRP_FILE" --freq "$FREQ" "$CODE_TO_PLAY"
+          python3 "$IRRP_SCRIPT" -p -g $TX_GPIO -f "$IRRP_FILE" --freq "$FREQ" "$CODE_TO_PLAY" || whiptail --msgbox "Error running Python script." 10 50
         else
-          python3 "$IRRP_SCRIPT" -p -g $TX_GPIO -f "$IRRP_FILE" "$CODE_TO_PLAY"
+          python3 "$IRRP_SCRIPT" -p -g $TX_GPIO -f "$IRRP_FILE" "$CODE_TO_PLAY" || whiptail --msgbox "Error running Python script." 10 50
         fi
           else
         whiptail --msgbox "Going back to menu!" 10 50
