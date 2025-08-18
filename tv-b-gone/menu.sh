@@ -122,7 +122,7 @@ while true; do
       if [ "$MODE" = "1" ]; then
         CHAIN=$(whiptail --inputbox "Enter chain length:" 10 50 "100" 3>&1 1>&2 2>&3)
         DELAY=$(whiptail --inputbox "Enter delay between codes (ms):" 10 50 "100" 3>&1 1>&2 2>&3)
-        whiptail --msgbox "Starting Dictionary attack using $SELECTED_IR file, set chain lenght $CHAIN and ${DELAY}ms delay" 10 60
+        whiptail --msgbox "Running dictionary attack using $SELECTED_IR file, set chain lenght $CHAIN and ${DELAY}ms delay" 10 60
         python3 "$IR_CONV" "$IR_DIR/$SELECTED_IR" "$CHAIN" "$TX_GPIO" "$DELAY" ||  whiptail --msgbox "Error running Python script." 10 50
 
       elif [ "$MODE" = "2" ]; then
@@ -147,7 +147,7 @@ while true; do
           NAME_MENU_ITEMS+=" $N $N"
        done
 
-       CODE_NAME=$(whiptail --title "Bruteforce by Button" --menu "Choose button name to bruteforce:" 20 60 10 $NAME_MENU_ITEMS 3>&1 1>&2 2>&3)
+       CODE_NAME=$(whiptail --title "Button selection" --menu "Choose button name to use:" 20 60 10 $NAME_MENU_ITEMS 3>&1 1>&2 2>&3)
        if [ -z "$CODE_NAME" ]; then
         whiptail --msgbox "No button selected. Returning to menu." 10 50
         continue
