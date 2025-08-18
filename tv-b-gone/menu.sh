@@ -1,13 +1,14 @@
-#!/bin/bash
-#Script uses whiptail to create "user friendly" interface
-
-# === File and GPIO configuration ===
-TVBGONE_SCRIPT="tv-b-gone.py"
-JAMMER_SCRIPT="IR-jam.py"
-IRRP_SCRIPT="irrp.py"
-IRRP_FILE="saved_codes.json"
-TX_GPIO=17 #Same pin as tv-b-gone python file
-RX_GPIO=18 #For IR reception
+#!/bin/bash                                                                                                                                                                                                                                 
+                                                                                                                                                                                                                                            
+# === File and GPIO configuration ===                                                                                                                                                                                                       
+TVBGONE_SCRIPT="TV-B-Gone.py"                                                                                                                                                                                                               
+JAMMER_SCRIPT="IR-jam.py"                                                                                                                                                                                                                   
+IRRP_SCRIPT="irrp.py"                                                                                                                                                                                                                       
+IRRP_FILE="saved_codes.json"                                                                                                                                                                                                                
+IR_CONV="irconv.py"
+IR_DIR="./ir_custom_files"
+TX_GPIO=17
+RX_GPIO=18
 # ===================================
 
 whiptail --msgbox "Hello!\nActivating pigpiod!" 10 50
@@ -20,7 +21,8 @@ while true; do
     "3" "Record new IR code (irrp)" \
     "4" "Play IR code (irrp)" \
     "5" "Delete IR code from file (irrp)" \
-    "6" "Exit" 3>&1 1>&2 2>&3)
+    "6" "Custom .ir file" \
+    "7" "Exit" 3>&1 1>&2 2>&3)
 
   case "$CHOICE" in
     "1")
@@ -43,9 +45,9 @@ while true; do
       if [ -n "$CODE_NAME" ]; then
       FREQ=$(whiptail --inputbox "Enter record frequency in kHz (default is 38):" 10 50 "38" 3>&1 1>&2 2>&3)
       if [[ "$FREQ" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
-        python3 "$IRRP_SCRIPT" -r -g $RX_GPIO -f "$IRRP_FILE" --freq "$FREQ" "$CODE_NAME" || whiptail --msgbox "Error running Python script." 10 50
+        python3 "$IRRP_SCRIPT" -r -g $RX_GPIO -f "$IRRP_FILE" --freq "$FREQ" "$CODE_NAME"
       else
-        python3 "$IRRP_SCRIPT" -r -g $RX_GPIO -f "$IRRP_FILE" "$CODE_NAME" || whiptail --msgbox "Error running Python script." 10 50
+        python3 "$IRRP_SCRIPT" -r -g $RX_GPIO -f "$IRRP_FILE" "$CODE_NAME"
       fi
        else
        whiptail --msgbox "Going back to menu!" 10 50
@@ -65,9 +67,9 @@ while true; do
       if [ -n "$CODE_TO_PLAY" ]; then
         FREQ=$(whiptail --inputbox "Enter playback frequency in kHz (default is 38):" 10 50 "38" 3>&1 1>&2 2>&3)
         if [[ "$FREQ" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
-          python3 "$IRRP_SCRIPT" -p -g $TX_GPIO -f "$IRRP_FILE" --freq "$FREQ" "$CODE_TO_PLAY" || whiptail --msgbox "Error running Python script." 10 50
+          python3 "$IRRP_SCRIPT" -p -g $TX_GPIO -f "$IRRP_FILE" --freq "$FREQ" "$CODE_TO_PLAY"
         else
-          python3 "$IRRP_SCRIPT" -p -g $TX_GPIO -f "$IRRP_FILE" "$CODE_TO_PLAY" || whiptail --msgbox "Error running Python script." 10 50
+          python3 "$IRRP_SCRIPT" -p -g $TX_GPIO -f "$IRRP_FILE" "$CODE_TO_PLAY"
         fi
           else
         whiptail --msgbox "Going back to menu!" 10 50
@@ -96,6 +98,68 @@ while true; do
       fi
       ;;
     "6")
+      if [ ! -d "$IR_DIR" ]; then
+        whiptail --msgbox "Directory $IR_DIR not found!" 10 50
+        continue
+      fi
+
+      IR_MENU_ITEMS=""
+      for file in "$IR_DIR"/*.ir; do
+        [ -e "$file" ] || continue
+        filename=$(basename "$file")
+        IR_MENU_ITEMS+=" $filename $filename"
+      done
+      SELECTED_IR=$(whiptail --title "Select .ir file" --menu "Choose a .ir file to use:" 20 60 10 $IR_MENU_ITEMS 3>&1 1>&2 2>&3)
+      if [ -z "$SELECTED_IR" ]; then
+        whiptail --msgbox "No file selected. Returning to menu." 10 50
+        continue
+      fi
+
+      MODE=$(whiptail --title "Mode" --menu "Choose IR sending mode:" 15 60 3 \
+        "1" "Bruteforce (send all IR codes in .ir file)" \
+        "2" "Single (send only one code by name)" \
+        "3" "Bruteforce by button name (e.g. Power, Mute...)" 3>&1 1>&2 2>&3)
+      if [ "$MODE" = "1" ]; then
+        CHAIN=$(whiptail --inputbox "Enter chain length:" 10 50 "100" 3>&1 1>&2 2>&3)
+        DELAY=$(whiptail --inputbox "Enter delay between codes (ms):" 10 50 "100" 3>&1 1>&2 2>&3)
+        whiptail --msgbox "Starting bruteforce using $SELECTED_IR file, set chain lenght $CHAIN and ${DELAY}ms delay" 10 60
+        python3 "$IR_CONV" "$IR_DIR/$SELECTED_IR" "$CHAIN" "$TX_GPIO" "$DELAY" ||  whiptail --msgbox "Error running Python script." 10 50
+
+      elif [ "$MODE" = "2" ]; then
+        NAME_MENU_ITEMS=""
+        while read -r line; do
+          NAME=$(echo "$line" | cut -d: -f2- | xargs)
+          NAME_MENU_ITEMS+=" $NAME $NAME"
+        done < <(grep -i "^name:" "$IR_DIR/$SELECTED_IR")
+
+        CODE_NAME=$(whiptail --title "Select IR Code" --menu "Choose code to send: (Dont use .ir file with same names!)" 20 60 10 $NAME_MENU_ITEMS 3>&1 1>&2 2>&3)
+        if [ -z "$CODE_NAME" ]; then
+          whiptail --msgbox "No code selected. Returning to menu." 10 50
+          continue
+        fi
+        CHAIN=$(whiptail --inputbox "Enter chain length:" 10 50 "100" 3>&1 1>&2 2>&3)
+        whiptail --msgbox "Sending code $CODE_NAME from $SELECTED_IR with chain lenght $CHAIN" 10 60
+        python3 "$IR_CONV" "$IR_DIR/$SELECTED_IR" "$CODE_NAME" "$CHAIN" "$TX_GPIO" || whiptail --msgbox "Error running Python script." 10 50
+      elif [ "$MODE" = "3" ]; then
+       NAME_MENU_ITEMS=""
+       UNIQUE_NAMES=$(grep -i "^name:" "$IR_DIR/$SELECTED_IR" | cut -d: -f2- | xargs -n1 | sort -u)
+       for N in $UNIQUE_NAMES; do
+          NAME_MENU_ITEMS+=" $N $N"
+       done
+
+       CODE_NAME=$(whiptail --title "Bruteforce by Button" --menu "Choose button name to bruteforce:" 20 60 10 $NAME_MENU_ITEMS 3>&1 1>&2 2>&3)
+       if [ -z "$CODE_NAME" ]; then
+        whiptail --msgbox "No button selected. Returning to menu." 10 50
+        continue
+       fi
+       CHAIN=$(whiptail --inputbox "Enter chain length:" 10 50 "100" 3>&1 1>&2 2>&3)
+       DELAY=$(whiptail --inputbox "Enter delay between codes (ms):" 10 50 "100" 3>&1 1>&2 2>&3)
+       whiptail --msgbox "Bruteforcing remote button $CODE_NAME from $SELECTED_IR with chain lenght $CHAIN and ${DELAY}ms delay" 10 60
+       python3 "$IR_CONV" "$IR_DIR/$SELECTED_IR" "$CODE_NAME" "$CHAIN" "$TX_GPIO" "$DELAY" || whiptail --msgbox "Error running Python script." 10 50
+      fi
+      whiptail --msgbox "Going back to menu!" 10 50
+      ;;
+    "7")
       whiptail --msgbox "Deactivating pigpiod!\nGood bye!" 10 50
       sudo pigpiod kill
       break
@@ -107,5 +171,3 @@ while true; do
       ;;
   esac
 done
-
-
