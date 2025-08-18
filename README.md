@@ -24,6 +24,8 @@ Because IR Leds use microsecond pulses, you can drive them to 100mA without prob
 Circuit uses TSOP1838 IR receiver, but you can also use TSOP38238 or similar, but make sure it outputs over 3 volts when no signal is detected. Other components are based of the datasheet and are not really needed, I used them only to fill up extra space on universal board.
 
 ![RX](images/RX.png)
+# Flipper zero .ir files support
+Now, .ir files are supported, that includes most of Flipper Zero .ir protocols and also raw. I tested all protocols supported by ardunio IRremote library and it seems to work fine. You can either send single code from .ir file by name or send all codes or even make dictionary attack on single button, like Power, Vol Up etc. just like the Flipper Zero!
 # External references
 - https://learn.adafruit.com/circuitpython-tv-zapper-with-circuit-playground-express/overview - classic TV-B-Gone codes
 - https://github.com/bikeNomad/micropython-tv-b-gone - new codes from universal TV remote
@@ -31,6 +33,4 @@ Circuit uses TSOP1838 IR receiver, but you can also use TSOP38238 or similar, bu
 - https://www.tvbgone.com/ - original TV-B-Gone website
 - https://www.instructables.com/Raspberry-Pi-Zero-Universal-Remote/ - Calculating IR LED, other good tips
 # TO DO
-- Fix some errors - doubled text, cancel function
-- Flipper Zero .ir files support
 - More functions, possibilities...
