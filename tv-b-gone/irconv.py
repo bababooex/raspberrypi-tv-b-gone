@@ -259,7 +259,7 @@ for key, base in INHERITS.items():
     inherited = PROTOCOLS[base].copy()
     inherited.update(PROTOCOLS[key])  # preserve overrides
     PROTOCOLS[key] = inherited
-# ----------------------------------------------------------------------------
+
 # Parse Flipper .ir file
 def parse_ir_file(path):
     with open(path, "r") as f:
@@ -343,7 +343,7 @@ def send_wave_chained(pi, pin, pulses, max_chunk_len=5400, max_chain_length=6):
 
     pi.write(pin, 0)
     pi.wave_clear()
-# ----------------------------------------------------------------------------
+
 def hex_to_int_le(s):
     s = s.strip()
     if " " not in s:
@@ -351,7 +351,7 @@ def hex_to_int_le(s):
         return int(s, 16)
     return int.from_bytes([int(x, 16) for x in s.split()], "little")
 
-# ----------------------------------------------------------------------------
+
 def send_parsed(info, pi, pin=17, chain_len=6):
     name = info["name"]
     proto = info["protocol"].lower()
@@ -424,7 +424,7 @@ def send_parsed(info, pi, pin=17, chain_len=6):
 
     print(f"Sending code named {name} via {proto.upper()} protocol with {len(pulses)} pulses")
     send_wave_chained(pi, pin, pulses, MAX_PULSES, chain_len)
-# ----------------------------------------------------------------------------
+
 def send_raw(info, pi, pin=17, chain_len=6):
     name = info.get("name", "Unnamed")
     freq = int(info.get("frequency", 38000))
@@ -464,7 +464,7 @@ def send_raw(info, pi, pin=17, chain_len=6):
 
     print(f"Sending raw code named {name} with {len(pulses)} pulses")
     send_wave_chained(pi, pin, pulses, MAX_PULSES, chain_len)
-# ----------------------------------------------------------------------------
+
 def main():
     if len(sys.argv) < 2:
         print("Usage:")
@@ -543,3 +543,4 @@ if __name__=="__main__":
         main()
     except KeyboardInterrupt: # Good for bruteforce mode
         print("\nInterrupted by user.")
+
