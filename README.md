@@ -29,8 +29,10 @@ Now, .ir files are supported, that includes most of Flipper Zero .ir protocols a
 # External references
 - https://learn.adafruit.com/circuitpython-tv-zapper-with-circuit-playground-express/overview - classic TV-B-Gone codes
 - https://github.com/bikeNomad/micropython-tv-b-gone - new codes from universal TV remote
+- https://github.com/flipperdevices/flipperzero-firmware - official flipper zero firmware (got .ir codes from there)
+- https://github.com/Arduino-IRremote/Arduino-IRremote/tree/master - Arduino-IRremote library, helped alot with testing
 - https://abyz.me.uk/rpi/pigpio/index.html - pigpio library website
 - https://www.tvbgone.com/ - original TV-B-Gone website
-- https://www.instructables.com/Raspberry-Pi-Zero-Universal-Remote/ - Calculating IR LED, other good tips
+- https://www.instructables.com/Raspberry-Pi-Zero-Universal-Remote/ - calculating IR LED, other good tips
 # TO DO
 - More functions, possibilities...
