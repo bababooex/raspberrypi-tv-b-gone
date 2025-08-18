@@ -116,13 +116,13 @@ while true; do
       fi
 
       MODE=$(whiptail --title "Mode" --menu "Choose IR sending mode:" 15 60 3 \
-        "1" "Bruteforce (send all IR codes in .ir file)" \
+        "1" "Dictionary attack (send all IR codes in .ir file)" \
         "2" "Single (send only one code by name)" \
-        "3" "Bruteforce by button name (e.g. Power, Mute...)" 3>&1 1>&2 2>&3)
+        "3" "Dictionary attack by button name (e.g. Power, Mute...)" 3>&1 1>&2 2>&3)
       if [ "$MODE" = "1" ]; then
         CHAIN=$(whiptail --inputbox "Enter chain length:" 10 50 "100" 3>&1 1>&2 2>&3)
         DELAY=$(whiptail --inputbox "Enter delay between codes (ms):" 10 50 "100" 3>&1 1>&2 2>&3)
-        whiptail --msgbox "Starting bruteforce using $SELECTED_IR file, set chain lenght $CHAIN and ${DELAY}ms delay" 10 60
+        whiptail --msgbox "Starting Dictionary attack using $SELECTED_IR file, set chain lenght $CHAIN and ${DELAY}ms delay" 10 60
         python3 "$IR_CONV" "$IR_DIR/$SELECTED_IR" "$CHAIN" "$TX_GPIO" "$DELAY" ||  whiptail --msgbox "Error running Python script." 10 50
 
       elif [ "$MODE" = "2" ]; then
@@ -154,7 +154,7 @@ while true; do
        fi
        CHAIN=$(whiptail --inputbox "Enter chain length:" 10 50 "100" 3>&1 1>&2 2>&3)
        DELAY=$(whiptail --inputbox "Enter delay between codes (ms):" 10 50 "100" 3>&1 1>&2 2>&3)
-       whiptail --msgbox "Bruteforcing remote button $CODE_NAME from $SELECTED_IR with chain lenght $CHAIN and ${DELAY}ms delay" 10 60
+       whiptail --msgbox "Running dictionary attack with remote button $CODE_NAME from $SELECTED_IR with chain lenght $CHAIN and ${DELAY}ms delay" 10 60
        python3 "$IR_CONV" "$IR_DIR/$SELECTED_IR" "$CODE_NAME" "$CHAIN" "$TX_GPIO" "$DELAY" || whiptail --msgbox "Error running Python script." 10 50
       fi
       whiptail --msgbox "Going back to menu!" 10 50
