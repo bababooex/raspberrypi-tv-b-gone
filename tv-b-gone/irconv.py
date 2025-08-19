@@ -59,7 +59,7 @@ def build_samsung_frame(info):
 # Not sure
 def build_pioneer_frame(info):
     addr = hex_to_int_le(info.get("address", "00")) & 0xFF
-    cmd  = hex_to_int_le(info¨.get("command", "00")) & 0xFF
+    cmd  = hex_to_int_le(info.get("command", "00")) & 0xFF
     return (
         addr |
         ((~addr & 0xFF) << 8) |
@@ -548,3 +548,4 @@ if __name__=="__main__":
         main()
     except KeyboardInterrupt: # Good for bruteforce mode
         print("\nInterrupted by user.")
+
