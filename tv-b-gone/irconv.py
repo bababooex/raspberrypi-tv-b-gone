@@ -34,24 +34,21 @@ def build_necext_frame(info):
 def build_nec42_frame(info):
     addr = hex_to_int_le(info.get("address", "0000")) & 0x1FFF
     cmd  = hex_to_int_le(info.get("command", "00")) & 0xFF
-    return (
-        addr |
-        ((~addr & 0x1FFF) << 13) |
-        (cmd << 26) |
-        ((~cmd & 0xFF) << 34)
-    )
+    return addr | ((~addr & 0x1FFF) << 13) | ((cmd & 0x3F) << 26) | ((cmd & 0xC0) >> 6) | ((~cmd & 0xFF) << 2) 
+
 # Probably OK
 def build_nec42ext_frame(info):
     addr = hex_to_int_le(info.get("address", "0000000")) & 0x3FFFFFF
     cmd  = hex_to_int_le(info.get("command", "0000")) & 0xFFFF
-    return addr | (cmd << 26)
+
+    return addr | ((cmd & 0x3F) << 26) | (cmd & 0xFFC0) >> 6
 #OK
 def build_samsung_frame(info):
     addr = hex_to_int_le(info.get("address", "00")) & 0xFF
     cmd  = hex_to_int_le(info.get("command", "00")) & 0xFF
     return (
         addr |
-        ((addr) << 8) |
+        (addr << 8) |
         (cmd << 16) |
         ((~cmd & 0xFF) << 24)
     )
@@ -64,47 +61,46 @@ def build_pioneer_frame(info):
         addr |
         ((~addr & 0xFF) << 8) |
         (cmd << 16) |
-        ((~cmd & 0xFF) << 24) |
-        (0 << 32)  # Stop bit always there
+        ((~cmd & 0xFF) << 24)
     )
-
-# This is hell, but works (need to adapt it to IRDB)
+# More close to Flippers format
 def build_kaseikyo_frame(info):
-    vendor = hex_to_int_le(info.get("vendor", "0220")) & 0xFFFF
-    address = hex_to_int_le(info.get("address", "0000")) & 0xFFF
-    command = hex_to_int_le(info.get("command", "00")) & 0xFF
-    # vedor parity
-    vendor_parity = vendor ^ (vendor >> 8)
-    vendor_parity = (vendor_parity ^ (vendor_parity >> 4)) & 0xF
+    vendor_id = hex_to_int_le(info.get("address", "0220")) & 0xFFFF
+    command = hex_to_int_le(info.get("command", "0000")) & 0xFFFF
 
-    # addr+vendor parity
-    addr_parity_word = (address << 4) | vendor_parity
+    genre1 = int(info.get("genre1", "0"), 16) & 0xF
+    genre2 = int(info.get("genre2", "0"), 16) & 0xF
+    id_bits = int(info.get("id", "0"), 16) & 0x3
 
-    # extracting bytes
-    byte2 = addr_parity_word & 0xFF
-    byte3 = (addr_parity_word >> 8) & 0xFF
+    b0 = vendor_id & 0xFF
+    b1 = (vendor_id >> 8) & 0xFF
 
-    # cmd
-    byte4 = command & 0xFF
+    vendor_parity = b0 ^ b1
+    vendor_parity = (vendor_parity & 0xF) ^ (vendor_parity >> 4)
 
-    # final parity
-    byte5 = command ^ byte2 ^ byte3
+    b2 = (vendor_parity & 0xF) | (genre1 << 4)
+    b3 = (genre2 & 0xF) | ((command & 0xF) << 4)
+    b4 = ((id_bits & 0x3) << 6) | ((command >> 4) & 0x3F)
+    b5 = b2 ^ b3 ^ b4
 
-    # everything packed together
-    return( vendor | (addr_parity_word << 16) | (byte4 << 32) | (byte5 << 40))
-
+    return  (b0 |
+            (b1 << 8) |
+            (b2 << 16) |
+            (b3 << 24) |
+            (b4 << 32) |
+            (b5 << 40))
 # OK
 def build_rc5_frame(info):
     toggle = 1
     addr = hex_to_int_le(info.get("address", "00")) & 0x1F
     cmd  =    hex_to_int_le(info.get("command", "00")) & 0x3F
     return (0b11 << 12) | (toggle << 11) | (addr << 6) | cmd
-# Not sure
+# Not sure, needs inverting or somethin
 def build_rc5x_frame(info):
     toggle = 1
     addr = hex_to_int_le(info.get("address", "00")) & 0x1F  # 7-bit address
     cmd  = hex_to_int_le(info.get("command", "00")) & 0x7F
-    frame = (0b11 << 13) | (toggle << 12) | (addr << 7) | cmd
+    frame = (1 << 13) | (toggle << 12) | (addr << 7) | cmd
     frame ^= (1 << 6) # 7th bit inverted
     return frame
 # OK
@@ -130,7 +126,7 @@ def build_sirc15_frame(info):
     return cmd | (addr << 7)
 #OK
 def build_sirc20_frame(info):
-    cmd  = hex_to_int_le(info.get("command", "00")) & 0x7F 
+    cmd  = hex_to_int_le(info.get("command", "00")) & 0x7F
     addr = hex_to_int_le(info.get("address", "00")) & 0x1FFF
     return cmd | (addr << 7)
 
@@ -178,7 +174,7 @@ PROTOCOLS = {
         "bits": 14
     },
     "rc5x": {
-        **{}, **{"bits": 15}  # extended, 15 bits total
+        **{}, **{"bits": 14}
     },
     # RC6
     "rc6": {
@@ -218,7 +214,7 @@ PROTOCOLS = {
         "bit1": [(1, 500), (0, 1500)],
         "stop": [],
         "bit_order": "lsb",
-        "bits": 33
+        "bits": 32
     },
     # Sony SIRC 12/15/20-bit
     "sirc": {
@@ -548,4 +544,3 @@ if __name__=="__main__":
         main()
     except KeyboardInterrupt: # Good for bruteforce mode
         print("\nInterrupted by user.")
-
