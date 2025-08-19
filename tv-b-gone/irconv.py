@@ -44,11 +44,13 @@ def build_nec42ext_frame(info):
     return addr | (cmd << 26)
 #OK
 def build_samsung_frame(info):
-    addr = hex_to_int_le(info.get("address", "0000")) & 0xFFFF
-    cmd  = hex_to_int_le(info.get("command", "0000")) & 0xFFFF
+    addr = hex_to_int_le(info.get("address", "00")) & 0xFF
+    cmd  = hex_to_int_le(info.get("command", "00")) & 0xFF
     return (
         addr |
-        (addr << 16) 
+        (addr << 8) |
+        (cmd << 16) |
+        ((~cmd & 0xFF) << 24)
     )
 
 # Not sure
@@ -469,7 +471,7 @@ def main():
         print("Usage:")
         print("  Single name: python3 irconv.py /path/to/file.ir <name> <chain_len> <gpio_pin>")
         print("  Bruteforce all: python3 irconv.py /path/to/file.ir <chain_len> <gpio_pin> <delay_ms>")
-        print("  Name bruteforce: python3 irconv.py file.ir <name> <chain_len> <gpio_pin> <delay_ms>")
+        print("  Name bruteforce: python3 irconv.py /path/to/file.ir <name> <chain_len> <gpio_pin> <delay_ms>")
         sys.exit(1)
     delay_ms = 0 # Prevent unbound value
     ir_path = sys.argv[1]
@@ -542,4 +544,5 @@ if __name__=="__main__":
         main()
     except KeyboardInterrupt: # Good for bruteforce mode
         print("\nInterrupted by user.")
+
 
