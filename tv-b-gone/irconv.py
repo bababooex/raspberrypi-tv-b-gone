@@ -34,23 +34,21 @@ def build_necext_frame(info):
 def build_nec42_frame(info):
     addr = hex_to_int_le(info.get("address", "0000")) & 0x1FFF
     cmd  = hex_to_int_le(info.get("command", "00")) & 0xFF
-    return addr | ((~addr & 0x1FFF) << 13) | ((cmd & 0x3F) << 26) | ((cmd & 0xC0) >> 6) | ((~cmd & 0xFF) << 2) 
-
+    return (addr | ((~addr & 0x1FFF) << 13) | (cmd << 26) | ((~cmd & 0xFF) << 34) )
+    
 # Probably OK
 def build_nec42ext_frame(info):
     addr = hex_to_int_le(info.get("address", "0000000")) & 0x3FFFFFF
     cmd  = hex_to_int_le(info.get("command", "0000")) & 0xFFFF
 
-    return addr | ((cmd & 0x3F) << 26) | (cmd & 0xFFC0) >> 6
+    return addr | (cmd << 26)
 #OK
 def build_samsung_frame(info):
-    addr = hex_to_int_le(info.get("address", "00")) & 0xFF
-    cmd  = hex_to_int_le(info.get("command", "00")) & 0xFF
+    addr = hex_to_int_le(info.get("address", "0000")) & 0xFFFF
+    cmd  = hex_to_int_le(info.get("command", "0000")) & 0xFFFF
     return (
         addr |
-        (addr << 8) |
-        (cmd << 16) |
-        ((~cmd & 0xFF) << 24)
+        (addr << 16) 
     )
 
 # Not sure
@@ -544,3 +542,4 @@ if __name__=="__main__":
         main()
     except KeyboardInterrupt: # Good for bruteforce mode
         print("\nInterrupted by user.")
+
