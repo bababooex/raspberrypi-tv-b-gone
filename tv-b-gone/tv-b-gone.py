@@ -73,7 +73,7 @@ def load_and_send(file_path):
             except Exception as e:
                 print(f"Error sending code: {e}")
 
-PROTOCOL_FREQUENCIES = { # common protocol frequnecies 
+PROTOCOL_FREQUENCIES = { # common protocol frequencies
     "NEC": 38000,
     "SAMSUNG": 38000,
     "RC5": 36000,
