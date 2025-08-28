@@ -1,5 +1,5 @@
-# TV-B-Gone for raspberry pi
-This repository contains implementation of the TV-B-Gone project, it is in simple terms universal remote that turns off all televisions within its range. Original TV-B-Gone was created by Mitch Altman, nowdays, there are a lot of implementations, but I have never seen any for raspberry pi, so this is it. I also added option to save and replay your own codes with irrp.py - IR example from official pigpio library. 
+# raspberrypi-infrared-experimentaion
+This repository contains implementation of the TV-B-Gone project, it is in simple terms universal remote that turns off all televisions within its range. Original TV-B-Gone was created by Mitch Altman, nowdays, there are a lot of implementations, but I have never seen any for raspberry pi, so this is it. Also, unlike original TV-B-Gone, that is only focused on TVs, this repository is packed with scripts allowing to experiment with more stuff, then just TVs, it is easy to navigate and fun to play with. 
 # Requirements
 The script requires pigpio library to work, you can install it by running:
 ```
