@@ -2,8 +2,11 @@ import pigpio
 import sys
 import time
 import os
+
 # This is an attempt to create converter from flipper .ir files to work with pigpio
 # Tested protocols have OK above them, the test was done using Arduino-IRremote library
+# Repeats not supported, but you will probably not need them anyways for controlling random device
+
 # === Configuration ===
 GPIO_IR_LED = 17
 MAX_PULSES = 5400
@@ -544,5 +547,6 @@ if __name__=="__main__":
         main()
     except KeyboardInterrupt: # Good for bruteforce mode
         print("\nInterrupted by user.")
+
 
 
