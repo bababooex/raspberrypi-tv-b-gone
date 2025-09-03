@@ -96,16 +96,15 @@ def build_kaseikyo_frame(info):
 def build_rc5_frame(info):
     toggle = 1
     addr = hex_to_int_le(info.get("address", "00")) & 0x1F
-    cmd  =    hex_to_int_le(info.get("command", "00")) & 0x3F
+    cmd  = hex_to_int_le(info.get("command", "00")) & 0x3F
     return (0b11 << 12) | (toggle << 11) | (addr << 6) | cmd
-# Not sure, needs inverting or somethin
+# Probably OK
 def build_rc5x_frame(info):
     toggle = 1
-    addr = hex_to_int_le(info.get("address", "00")) & 0x1F  # 7-bit address
+    C6 = (~cmd >> 6) & 0x01 # Inverted sixth bit for rc5x
+    addr = hex_to_int_le(info.get("address", "00")) & 0x1F 
     cmd  = hex_to_int_le(info.get("command", "00")) & 0x7F
-    frame = (1 << 13) | (toggle << 12) | (addr << 7) | cmd
-    frame ^= (1 << 6) # 7th bit inverted
-    return frame
+    return (1 << 13) | (C6 << 12) | (toggle << 11) | (addr << 6) | cmd
 # OK
 def build_rc6_frame(info):
     toggle = 1
@@ -547,6 +546,7 @@ if __name__=="__main__":
         main()
     except KeyboardInterrupt: # Good for bruteforce mode
         print("\nInterrupted by user.")
+
 
 
 
