@@ -13,7 +13,7 @@ sudo make install
 Firstly, you need to clone my repository and navigate to it:
 ```
 git clone https://github.com/bababooex/raspberrypi-tv-b-gone.git
-cd raspberrypi-tv-b-gone
+cd ./raspberrypi-tv-b-gone/tv-b-gone
 ```
 To use the main script, make it executable with chmod and then simply run it with bash.
 ```
