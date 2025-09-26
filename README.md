@@ -31,11 +31,6 @@ Circuit uses TSOP1838 IR receiver, but you can also use TSOP38238 or similar, bu
 ![RX](images/RX.png)
 # Flipper zero .ir files support
 Now, .ir files are supported, that includes most of Flipper Zero .ir protocols and also raw. I tested all protocols supported by ardunio IRremote library and it seems to work fine. You can either send single code from .ir file by name or send all codes or even make dictionary attack on single button, like Power, Vol Up etc. just like the Flipper Zero!
-Encoded version looks like this: 
-
-![Holtek](images/Holtek.png)
-
-You can see TE override, because short lenght is 348 uS. Total bit lenght is 13 bits, thus key + header in this instance. 
 # Flipper zero testing
 So what about flipper zero decoding my ir code, for example RC5 protocol:
 ```
