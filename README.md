@@ -10,7 +10,12 @@ make
 sudo make install
 ```
 # Usage
-To use the script, make it executable with chmod and then simply run it with bash.
+Firstly, you need to clone my repository and navigate to it:
+```
+git clone https://github.com/bababooex/raspberrypi-tv-b-gone.git
+cd raspberrypi-tv-b-gone
+```
+To use the main script, make it executable with chmod and then simply run it with bash.
 ```
 sudo chmod +x menu.sh
 ./menu.sh
